@@ -156,6 +156,8 @@ class GaussEst(BaseEst):
         # Computes the MAP cost
         zvar1 = repeat_axes(self.zvar,self.shape,self.var_axes,rep=False)
         rvar1 = repeat_axes(rvar,     self.shape,self.var_axes,rep=False)
+        zvar1[zvar1 == 0] = 1e-4
+        rvar1[rvar1==0] = 1e-4
         cost = (np.abs(zhat-self.zmean)**2) / zvar1 \
              + (np.abs(zhat-r)**2) / rvar1
         if avg_var_cost:
@@ -171,6 +173,7 @@ class GaussEst(BaseEst):
                 clog = np.log(2*np.pi*zvar1)
             cost += clog
         else:
+            zhatvar[zhatvar==0] = 1e-4
             d = np.log(self.zvar/zhatvar) 
             if avg_var_cost:
                 cost += np.mean(d)*nz

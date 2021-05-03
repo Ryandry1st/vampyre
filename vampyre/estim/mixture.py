@@ -151,14 +151,14 @@ class MixEst(BaseEst):
         # Compute p_list[i] \prop w[i]*exp(-cost_list[i]),
         # which represents the probabilities for each component.
         p_list = []
-        psum = np.zeros(self.shape)
+        psum = np.zeros(self.shape, dtype=np.complex)
         for i in range(ncomp):
             pi = self.w[i]*np.exp(-cost_list[i] + cmin)
             psum += pi
             p_list.append(pi)
         cost = np.sum(-np.log(psum) + cmin)
         for i in range(ncomp):
-            p_list[i] /= psum        
+            p_list[i] = p_list[i] / psum        
         
         # Save the probability, and conditional means and variances
         self.prob = p_list
@@ -166,8 +166,8 @@ class MixEst(BaseEst):
         self.zvar_list = zvar_list
         
         # Compute prior mean and variance
-        zmean = np.zeros(self.shape)
-        zsq = np.zeros(self.shape)
+        zmean = np.zeros(self.shape, dtype=np.complex)
+        zsq = np.zeros(self.shape, dtype=np.complex)
         for i in range(ncomp):
             zmean += p_list[i]*zmean_list[i]
             zsq   += p_list[i]*(zvar_list[i] + np.abs(zmean_list[i])**2)

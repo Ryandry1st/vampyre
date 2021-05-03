@@ -168,6 +168,8 @@ class GMMEst(BaseEst):
         varc = []
         for i in range(nc):
             probc[i] = np.mean(prob_list[i])
+            if probc[i] < 1e-6:
+                probc[i] = 1e-3
             meanc[i] = np.mean(prob_list[i]*zmean_list[i])/probc[i]
             dsq = zvar_list[i] + np.abs((zmean_list[i]-meanc[i]))**2
             varci = np.mean((prob_list[i]*dsq)/probc[i],axis=self.var_axes)
